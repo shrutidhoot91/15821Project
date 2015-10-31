@@ -6,6 +6,7 @@ import sys
 # %matplotlib inline
 import pdb
 
+
 # Make sure that you set this to the location your caffe2 library lies.
 caffe2_root = '/home/shruti/caffe2'
 sys.path.insert(0, os.path.join(caffe2_root, 'gen'))
@@ -78,15 +79,20 @@ def ClassifyImageWithInception(image_file, show_image=False, output_name="softma
 # We will also load the synsets file where we can look up the actual words for each of our prediction.
 synsets = [l.strip() for l in open('synsets.txt').readlines()]
 
-pdb.set_trace()
-predictions = ClassifyImageWithInception("la.jpg").flatten()
-idx = np.argmax(predictions)
-print 'Prediction: %d, synset %s' % (idx, synsets[idx])
+#pdb.set_trace()
 
-indices = np.argsort(predictions)
-print 'Top five predictions:'
-for idx in indices[:-6:-1]:
-    print '%6d (prob %.4f) synset %s' % (idx, predictions[idx], synsets[idx])
+def detectObjects(filename):
+    predictions = ClassifyImageWithInception(filename).flatten()
+    idx = np.argmax(predictions)
+    print 'Prediction: %d, synset %s' % (idx, synsets[idx])
+    indices = np.argsort(predictions)
+    print 'Top two predictions:'
+    for idx in indices[:-3:-1]:
+        print '%6d (prob %.4f) synset %s' % (idx, predictions[idx], synsets[idx])
+
+
+detectObjects(sys.argv[1])
+#detectObjects(sys.argv[2])
 #pyplot.plot(predictions)
 
 #filters = workspace.FetchBlob('conv2d0_w')
