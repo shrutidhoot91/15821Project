@@ -1,7 +1,7 @@
 import numpy as np
 import os
 import sys
-import pdb
+import time
 
 # Make sure that you set this to the location your caffe2 library lies.
 caffe2_root = '/home/shruti/caffe2'
@@ -38,6 +38,7 @@ workspace.CreateBlob("input")
 net.device_option.CopyFrom(DEVICE_OPTION)
 workspace.CreateNet(net)
 
+print '\n================================================\n'
 
 def ClassifyImageWithInception(image_file, output_name="softmax2"):
     from skimage import io, transform
@@ -64,19 +65,24 @@ synsets = [l.strip() for l in open('synsets.txt').readlines()]
 #pdb.set_trace()
 
 def detectObjects(filename):
+    start = time.clock()
     predictions = ClassifyImageWithInception(filename).flatten()
-    idx = np.argmax(predictions)
-    print 'Prediction: %d, synset %s' % (idx, synsets[idx])
+    end = time.clock()
+    t = end - start
+    #idx = np.argmax(predictions)
+    #print 'Prediction: %d, synset %s' % (idx, synsets[idx])
     indices = np.argsort(predictions)
     print 'Top two predictions:'
     for idx in indices[:-3:-1]:
-        print '%6d (prob %.4f) synset %s' % (idx, predictions[idx], synsets[idx])
-
+        print '(prob %.4f) %s' % (predictions[idx], synsets[idx])
+    print 'Time elapsed: %.3f s' % (t)
 
 directory='/home/shruti/15821/output'
 # Walk the tree.
 for root, directories, files in os.walk(directory):
     for filename in files:
     # Join the two strings in order to form the full filepath.
+        print filename
         filepath = os.path.join(root, filename)
 	detectObjects(filepath)
+        print '================================================\n'
