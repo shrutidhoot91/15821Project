@@ -73,7 +73,7 @@ def detectObjects(filename):
     #print 'Prediction: %d, synset %s' % (idx, synsets[idx])
     indices = np.argsort(predictions)
     print 'Top two predictions:'
-    for idx in indices[:-3:-1]:
+    for idx in indices[:-6:-5]:
         print '(prob %.4f) %s' % (predictions[idx], synsets[idx])
     print 'Time elapsed: %.3f s' % (t)
 
